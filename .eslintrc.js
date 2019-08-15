@@ -6,7 +6,8 @@ module.exports = {
   'extends': [
     'plugin:vue/essential',
     '@vue/standard',
-    '@vue/typescript'
+    '@vue/typescript',
+    "plugin:vue/base"
   ],
   rules: {
     'no-console': process.env.NODE_ENV === 'production' ? 'error' : 'off',
@@ -15,4 +16,4 @@ module.exports = {
   parserOptions: {
     parser: '@typescript-eslint/parser'
   }
-}
+};
