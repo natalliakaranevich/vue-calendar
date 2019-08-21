@@ -1,0 +1,123 @@
+$text-color: #64b5f6;
+$day-width: 40px;
+
+.calendar-wrap {
+    margin: auto;
+    width: 80%;
+    height: 600px;
+    background: aliceblue;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    .calendar {
+        width: 90%;
+        height: 90%;
+        background: beige;
+
+        .header {
+            width: 100%;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: $text-color;
+            font-weight: bold;
+        }
+
+        .main {
+            padding: 0 20px;
+        }
+    }
+}
+
+.navigation {
+    display: grid;
+    grid-template-columns: repeat(2, calc(100% / 2));
+    margin-bottom: 30px;
+
+    a {
+        display: block;
+        text-decoration: none;
+        color: $text-color;
+    }
+}
+
+.actions {
+    display: flex;
+    align-items: flex-end;
+    justify-content: flex-end;
+}
+
+.week {
+    display: grid;
+    grid-template-columns: repeat(7, calc(100% / 7));
+    margin-bottom: 16px;
+
+    .day {
+        height: $day-width;
+        width: $day-width;
+        border-radius: 100%;
+        background: #4db6ac;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: #e0f2f1;
+
+        &.selected {
+            background: #004d40;
+            opacity: 0.5;
+        }
+
+        &.today {
+            background: #004d40;
+            opacity: 1;
+        }
+
+        &.weekends {
+            background: #b2dfdb;
+        }
+
+        &.gray {
+            background: #4db6ac;
+            opacity: 0.4;
+        }
+
+    }
+}
+
+.action {
+    width: $day-width * 1.1;
+    height: $day-width * 1.1;
+    border-radius: 40px;
+    background: #4db6ac;
+    color: #e0f2f1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    &.link-to-current-day {
+        opacity: 0;
+        transition: opacity 300ms;
+
+        &.show {
+            opacity: 1;
+        }
+    }
+
+    &.add-event {
+        margin-left: 10px;
+        background: #e0f2f1;
+        color: black;
+        font-size: 25px;
+    }
+}
+
+.new-event {
+    height: 90%;
+    width: 90%;
+    display: flex;
+    align-items: flex-start;
+    flex-direction: column;
+}

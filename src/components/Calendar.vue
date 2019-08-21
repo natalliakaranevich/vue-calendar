@@ -1,9 +1,9 @@
 <template>
-    <div class="calendar-wrap">
-        <div class="calendar">
+    <div class="calendar-wrap" >
+        <div class="calendar" v-if="!createNewEvent">
             <div class="header">{{ year[currentMonth] && year[currentMonth].heading }}</div>
             <div class="main">
-                <div class="actions">
+                <div class="navigation">
                     <a @click="this.showPrevMonth">prev</a>
                     <a @click="this.showNextMonth">next</a>
                 </div>
@@ -12,6 +12,7 @@
                             today: isToday(day),
                             selected: isActiveDay(day),
                             gray: notInCurrentMonth(day),
+                            weekends: day.wend,
                             day
                          }"
                          v-for="day in week"
@@ -19,8 +20,25 @@
                         {{day.day}}
                     </div>
                 </div>
-
+                <br>
+                <div v-for="event in events" class="created-events">
+                    {event.title}
+                </div>
+                <div class="actions">
+                    <div @click="showToday"
+                         :class="{show: showCurrentDateLink, 'link-to-current-day': true, action: true}">
+                        {{ today }}
+                    </div>
+                    <div class="add-event action" @click="createEvent">+</div>
+                </div>
             </div>
+        </div>
+        <div class="new-event" v-else>
+            <div @click="closeCreateEventForm">&#10060;</div>
+            <h1>Add new event to {{ year[currentMonth] && year[currentMonth].heading  }} - {{ today }}</h1>
+            <form onsubmit="onSubmit">
+                <custom-input label="Title" type="text" name="title" validate="required|email"/>
+            </form>
         </div>
     </div>
 </template>
@@ -29,6 +47,7 @@
     // @ts-ignore
     import NBMomentCalendar from 'nb-moment-calendar';
     import moment from 'moment';
+    import CustomInput from "@/components/formElements/custom-input.vue";
 
     const date = new Date();
     const currentYear = date.getFullYear();
@@ -37,12 +56,15 @@
 
     export default {
         name: 'Calendar',
+        components: {CustomInput},
         data: () => ({
             year,
             currentYear,
             currentMonth: date.getMonth(),
             selectedDay: date.getDate(),
-            today: date.getDate()
+            today: date.getDate(),
+            events: [],
+            createNewEvent: false
         }),
         methods: {
             log: (data, name) => {
@@ -52,9 +74,6 @@
                 const fday = moment(day.fday).format('MM-DD');
                 const fToday =  moment(date).format('MM-DD');
 
-                if (+day.day === +this.today) {
-                    debugger
-                }
                 return fday === fToday;
             },
             isActiveDay: function(day) {
@@ -91,9 +110,25 @@
                 } else {
                     this.currentMonth = this.currentMonth + 1;
                 }
+            },
+            showToday() {
+                this.currentMonth = date.getMonth();
+            },
+
+            createEvent() {
+                this.createNewEvent = true;
+            },
+            closeCreateEventForm() {
+                this.createNewEvent = false;
+            },
+            onSubmit() {
+
             }
         },
         computed: {
+            showCurrentDateLink() {
+                return this.currentMonth !== date.getMonth();
+            }
         },
         created(): void {
 
@@ -101,80 +136,4 @@
     }
 </script>
 
-<style scoped lang="scss">
-    $text-color: #64b5f6;
-
-    .calendar-wrap {
-        margin: auto;
-        width: 80%;
-        height: 600px;
-        background: aliceblue;
-        border-radius: 10px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-
-        .calendar {
-            width: 90%;
-            height: 90%;
-            background: beige;
-
-            .header {
-                width: 100%;
-                height: 50px;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                color: $text-color;
-                font-weight: bold;
-            }
-
-            .main {
-                padding: 0 20px;
-            }
-        }
-    }
-
-    .actions {
-        display: grid;
-        grid-template-columns: repeat(2, calc(100% / 2));
-        margin-bottom: 30px;
-
-        a {
-            display: block;
-            text-decoration: none;
-            color: $text-color;
-        }
-    }
-
-    .week {
-        display: grid;
-        grid-template-columns: repeat(7, calc(100% / 7));
-        margin-bottom: 16px;
-
-        .day {
-            height: 40px;
-            width: 40px;
-            border-radius: 100%;
-            background: #4db6ac;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            color: #e0f2f1;
-
-            &.selected {
-                background: #004d40;
-                opacity: 0.5;
-            }
-
-            &.today {
-                background: #004d40;
-                opacity: 1;
-            }
-
-            &.gray {
-                opacity: 0.4;
-            }
-        }
-    }
-</style>
+<style scoped lang="scss" src="../styles/styles.scss"/>
